@@ -35,16 +35,36 @@
         const ctx = canvas.getContext('2d');
         let drawing = false;
 
-        canvas.addEventListener('mousedown', () => {
+        // Mouse events
+        canvas.addEventListener('mousedown', (event) => {
             drawing = true;
             ctx.beginPath();
+            draw(event);
         });
 
         canvas.addEventListener('mouseup', () => {
             drawing = false;
+            ctx.beginPath();
         });
 
         canvas.addEventListener('mousemove', draw);
+
+        // Touch events
+        canvas.addEventListener('touchstart', (event) => {
+            drawing = true;
+            ctx.beginPath();
+            draw(event.touches[0]);
+        });
+
+        canvas.addEventListener('touchend', () => {
+            drawing = false;
+            ctx.beginPath();
+        });
+
+        canvas.addEventListener('touchmove', (event) => {
+            event.preventDefault();
+            draw(event.touches[0]);
+        });
 
         function draw(event) {
             if (!drawing) return;
@@ -52,10 +72,11 @@
             ctx.lineCap = 'round';
             ctx.strokeStyle = '#000';
 
-            ctx.lineTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
+            const rect = canvas.getBoundingClientRect();
+            ctx.lineTo(event.clientX - rect.left, event.clientY - rect.top);
             ctx.stroke();
             ctx.beginPath();
-            ctx.moveTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
+            ctx.moveTo(event.clientX - rect.left, event.clientY - rect.top);
         }
 
         function clearPad() {
