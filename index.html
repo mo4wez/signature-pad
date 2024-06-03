@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signature Pad</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #signature-pad {
+            border: 1px solid #000;
+            background-color: #fff;
+        }
+        #controls {
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="signature-pad" width="400" height="200"></canvas>
+    <div id="controls">
+        <button onclick="clearPad()">Clear</button>
+        <button onclick="savePad()">Save</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('signature-pad');
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
+
+        canvas.addEventListener('mousedown', () => {
+            drawing = true;
+            ctx.beginPath();
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            drawing = false;
+        });
+
+        canvas.addEventListener('mousemove', draw);
+
+        function draw(event) {
+            if (!drawing) return;
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#000';
+
+            ctx.lineTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
+        }
+
+        function clearPad() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function savePad() {
+            const dataURL = canvas.toDataURL('image/png');
+            Telegram.WebApp.sendData(dataURL); // Send data to Telegram Web App
+        }
+
+        Telegram.WebApp.ready();
+    </script>
+</body>
+</html>
