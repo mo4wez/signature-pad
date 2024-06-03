@@ -97,10 +97,12 @@
 
         function savePad() {
             const dataURL = canvas.toDataURL('image/png');
+            console.log('Signature data URL:', dataURL);
             Telegram.WebApp.sendData(dataURL); // Send data to Telegram Web App
         }
 
         Telegram.WebApp.ready();
+        console.log('Web App is ready');
     </script>
 </body>
 </html>
