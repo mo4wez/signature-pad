@@ -35,7 +35,36 @@
         const ctx = canvas.getContext('2d');
         let drawing = false;
 
-        // Mouse events
+        function getTouchPos(canvas, touchEvent) {
+            const rect = canvas.getBoundingClientRect();
+            return {
+                x: touchEvent.touches[0].clientX - rect.left,
+                y: touchEvent.touches[0].clientY - rect.top
+            };
+        }
+
+        function draw(event) {
+            if (!drawing) return;
+            let x, y;
+            if (event.type.includes('touch')) {
+                event.preventDefault();
+                const pos = getTouchPos(canvas, event);
+                x = pos.x;
+                y = pos.y;
+            } else {
+                x = event.clientX - canvas.offsetLeft;
+                y = event.clientY - canvas.offsetTop;
+            }
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#000';
+
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
         canvas.addEventListener('mousedown', (event) => {
             drawing = true;
             ctx.beginPath();
@@ -49,11 +78,10 @@
 
         canvas.addEventListener('mousemove', draw);
 
-        // Touch events
         canvas.addEventListener('touchstart', (event) => {
             drawing = true;
             ctx.beginPath();
-            draw(event.touches[0]);
+            draw(event);
         });
 
         canvas.addEventListener('touchend', () => {
@@ -61,23 +89,7 @@
             ctx.beginPath();
         });
 
-        canvas.addEventListener('touchmove', (event) => {
-            event.preventDefault();
-            draw(event.touches[0]);
-        });
-
-        function draw(event) {
-            if (!drawing) return;
-            ctx.lineWidth = 2;
-            ctx.lineCap = 'round';
-            ctx.strokeStyle = '#000';
-
-            const rect = canvas.getBoundingClientRect();
-            ctx.lineTo(event.clientX - rect.left, event.clientY - rect.top);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(event.clientX - rect.left, event.clientY - rect.top);
-        }
+        canvas.addEventListener('touchmove', draw);
 
         function clearPad() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
