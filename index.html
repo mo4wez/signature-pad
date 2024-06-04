@@ -97,7 +97,7 @@
 
         function savePad() {
             const dataURL = canvas.toDataURL('image/png');
-            Telegram.WebApp.sendData(dataURL);
+            Telegram.WebApp.sendData(`https://t.me/voucher_pdf_bot/signature?data=${dataURL}`);
         }
 
         Telegram.WebApp.ready();
