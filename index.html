@@ -30,7 +30,6 @@
         <button onclick="savePad()">Save</button>
     </div>
 
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         const canvas = document.getElementById('signature-pad');
         const ctx = canvas.getContext('2d');
@@ -98,11 +97,25 @@
 
         function savePad() {
             const dataURL = canvas.toDataURL('image/png');
-            Telegram.WebApp.sendData(dataURL);  // Send the data URL to the bot
+            sendData(dataURL);
         }
 
-        Telegram.WebApp.ready();
-        console.log('Web App is ready');
+        function sendData(signatureData) {
+            // Send signature data to Flask server
+            fetch('/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ signature_data: signatureData })
+            }).then(response => {
+                console.log('Signature data sent to server');
+                // Optionally handle response from server
+            }).catch(error => {
+                console.error('Error sending signature data:', error);
+            });
+        }
+
     </script>
 </body>
 </html>
