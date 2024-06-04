@@ -30,6 +30,7 @@
         <button onclick="savePad()">Save</button>
     </div>
 
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         const canvas = document.getElementById('signature-pad');
         const ctx = canvas.getContext('2d');
@@ -97,19 +98,11 @@
 
         function savePad() {
             const dataURL = canvas.toDataURL('image/png');
-            if (window.Telegram && Telegram.WebApp) {
-                Telegram.WebApp.sendData(dataURL);
-            } else {
-                console.error("Telegram Web App environment not available");
-            }
+            Telegram.WebApp.sendData(dataURL);  // Send the data URL to the bot
         }
 
-        if (window.Telegram && Telegram.WebApp) {
-            Telegram.WebApp.ready();
-            console.log('Web App is ready');
-        } else {
-            console.error("Telegram Web App environment not available");
-        }
+        Telegram.WebApp.ready();
+        console.log('Web App is ready');
     </script>
 </body>
 </html>
