@@ -97,11 +97,19 @@
 
         function savePad() {
             const dataURL = canvas.toDataURL('image/png');
-            Telegram.WebApp.sendData(`https://t.me/voucher_pdf_bot/signature?data=${dataURL}`);
+            if (window.Telegram && Telegram.WebApp) {
+                Telegram.WebApp.sendData(dataURL);
+            } else {
+                console.error("Telegram Web App environment not available");
+            }
         }
 
-        Telegram.WebApp.ready();
-        console.log('Web App is ready');
+        if (window.Telegram && Telegram.WebApp) {
+            Telegram.WebApp.ready();
+            console.log('Web App is ready');
+        } else {
+            console.error("Telegram Web App environment not available");
+        }
     </script>
 </body>
 </html>
