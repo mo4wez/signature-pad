@@ -30,7 +30,7 @@
         <button onclick="savePad()">Save</button>
     </div>
 
-    <script src="https://telegram.org/js/telegram-web-app.js>
+    <script>
         const canvas = document.getElementById('signature-pad');
         const ctx = canvas.getContext('2d');
         let drawing = false;
@@ -97,8 +97,7 @@
 
         function savePad() {
             const dataURL = canvas.toDataURL('image/png');
-            console.log('Signature data URL:', dataURL);
-            Telegram.WebApp.sendData(dataURL); // Send data to Telegram Web App
+            Telegram.WebApp.sendData(dataURL);
         }
 
         Telegram.WebApp.ready();
